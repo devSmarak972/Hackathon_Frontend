@@ -16,6 +16,9 @@ import Graph from "./components/graph";
 import Book from "./components/book";
 import Control from "./components/control";
 import Price from "./components/price";
+import History from "./components/history";
+import Notifications from "./components/notifications";
+import Profile from "./components/profile";
 
 // function App() {
 // const dispatch = useDispatch();
@@ -48,11 +51,34 @@ function App() {
 
   return (
     <div className="App">
-      <Portfolio />
-      {/* <Graph /> */}
-      <Book />
-      <Control />
-      <Price />
+      <div className="d-flex">
+        <div style={{width: 1500, marginLeft: 10}}>
+          <Graph />
+        </div>
+        <div style={{width: 1500, options: {maintainAspectRatio: false}, height: 400}}>
+          <Book />
+        </div>
+        <Notifications />
+      </div>
+      <div className="d-flex">
+        <div style={{width: 550, marginLeft: 30, marginTop: 160}}>
+          <Portfolio />
+        </div>
+        <div style={{marginLeft: 60, marginRight: 60, marginTop: 160}}>
+          <Price />
+        </div>
+        <div style={{marginRight: 20}}>
+          <Control />
+        </div>
+      </div>
+      <div>
+        <div style={{width: 1000, marginLeft: 220, marginBottom: 20}}>
+          <History />
+        </div>
+        <div style={{width: 700, marginBottom: 20, marginLeft: 350}}>
+          <Profile/>
+        </div>
+      </div>
     </div>
   );
 }

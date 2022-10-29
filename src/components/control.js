@@ -3,6 +3,8 @@ import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
+import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
 import { Provider, useSelector, useDispatch } from "react-redux";
 import {
   marketbuy,
@@ -73,18 +75,19 @@ const Control = () => {
   console.log(buy, sell, "in buy sell");
   return (
     <Card style={{ width: "18rem" }}>
-      <Card.Header>Control Pane</Card.Header>
-      <form onSubmit={e => handleSubmit(e)}>
-        <label>
-          BUY/SELL
-          <select>
+      <Card.Title style={{marginBottom: -10, marginTop: 5}}>Trade Panel</Card.Title>
+      <hr />
+      <Form onSubmit={e => handleSubmit(e)}>
+        <Form.Group as={Col} controlId="formGridBUY">
+          <Form.Label>BUY/SELL</Form.Label>
+          <Form.Select defaultValue="Choose...">
             <option value="buy">BUY</option>
             <option value="sell">SELL</option>
-          </select>
-        </label>
-        <label>
-          Select User
-          <select>
+          </Form.Select>
+        </Form.Group>
+        <Form.Group as={Col} controlId="formGridUser">
+          <Form.Label>Select User</Form.Label>
+          <Form.Select defaultValue="Select User">
             {users
               ? users.map(function (user) {
                   var list = [];
@@ -102,26 +105,27 @@ const Control = () => {
                 ]}
             {/* <option value="buy">User1</option>
             <option value="sell">User2</option> */}
-          </select>
-        </label>
-        <label>
-          Order Type
-          <select>
+          </Form.Select>
+        </Form.Group>
+        <Form.Group as={Col} controlId="formGridOrder">
+          <Form.Label>Order Type</Form.Label>
+          <Form.Select defaultValue="Select User">
             <option value="limit">Limit Order</option>
             <option value="market">Market Order</option>
-          </select>
-        </label>
-
-        <label>
-          Stock Amount:
-          <input type="number" name="amount" />
-        </label>
-        <label>
-          At price:
-          <input type="number" name="price" />
-        </label>
-        <input type="submit" value="Place Order" />
-      </form>
+          </Form.Select>
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicQuantity">
+          <Form.Label>Stock Amount</Form.Label>
+          <Form.Control type="number" min="1" name="amount" />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicFiat">
+          <Form.Label>At Price</Form.Label>
+          <Form.Control type="number" step="0.1" min="0" name="price" />
+        </Form.Group>
+        <Button variant="primary" type="submit" style={{marginBottom: 10}}>
+          Place Order
+        </Button>
+      </Form>
     </Card>
   );
 };

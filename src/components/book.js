@@ -121,6 +121,8 @@ const Book = () => {
     return list;
   }
   return (
+    <>
+    <h1 style={{marginTop: 30, marginBottom: 90}}>Order Book</h1>
     <div>
       <Table responsive striped bordered hover variant="dark" size="sm">
         <thead>
@@ -148,6 +150,7 @@ const Book = () => {
         </tbody>
       </Table>
     </div>
+    </>
   );
 };
 

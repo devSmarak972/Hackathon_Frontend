@@ -68,6 +68,8 @@ const Portfolio = () => {
   ];
 
   return (
+    <>
+    <h1 style={{marginTop: 30}}>User Portfolio</h1>
     <Table responsive striped bordered hover variant="dark" size="sm">
       <thead>
         <tr>
@@ -107,6 +109,7 @@ const Portfolio = () => {
         </tr> */}
       </tbody>
     </Table>
+    </>
   );
 };
 

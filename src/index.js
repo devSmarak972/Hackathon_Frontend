@@ -12,8 +12,6 @@ import Dashboard from "./pages/Dashboard";
 import NoPage from "./pages/Nopage";
 import store from "./store/index";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "mdb-react-ui-kit/dist/css/mdb.min.css";
-import "@fortawesome/fontawesome-free/css/all.min.css";
 import axios from "axios";
 // require("dotenv").config();
 // axios.defaults.baseURL = process.env.REACT_APP_URL;
