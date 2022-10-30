@@ -9,6 +9,7 @@ import {
   SELL,
   ORDER,
   ADDTRANS,
+  SETPRICE,
 } from "../actions/count.actions";
 import PriorityQueue from "js-priority-queue";
 function buycomp(a, b) {
@@ -47,7 +48,16 @@ function dequeue(list, comp) {
   if (list.length == 0) return -1;
   else return list.pop();
 }
-function transact(list, trans, buyInd, sellInd, price, quantity) {
+function transact(
+  list,
+  trans,
+  buyInd,
+  sellInd,
+  price,
+  quantity,
+  buyorder,
+  sellorder
+) {
   list[sellInd].quantity -= parseInt(quantity);
   list[sellInd].fiat += parseInt(price) * parseInt(quantity);
   list[buyInd].quantity += parseInt(quantity);
@@ -58,6 +68,8 @@ function transact(list, trans, buyInd, sellInd, price, quantity) {
     seller: list[sellInd].user_id,
     price: price,
     quantity: quantity,
+    buyorder: buyorder,
+    sellorder: sellorder,
   });
   console.log("transaction occuring", list, trans);
   return [list, trans];
@@ -68,7 +80,7 @@ const CountReducer = (
     buy: [],
     sell: [],
     users: [],
-    curr_price: 0,
+    marketprice: [],
     transaction: [],
     orders: [],
   },
@@ -178,6 +190,9 @@ const CountReducer = (
       var trans = state.transaction.map(a => {
         return { ...a };
       });
+      var mprice = state.marketprice.map(a => {
+        return { ...a };
+      });
       var i = 0;
 
       while (buynew.length > 0 && sellnew.length > 0) {
@@ -194,15 +209,19 @@ const CountReducer = (
           user => parseInt(user.user_id) === parseInt(topbuy.user_id)
         );
         if (topbuy.price >= topsell.price) {
-          var price, qty;
+          var price = 0,
+            qty;
           if (topbuy.market && !topsell.market) price = topsell.price;
           else if (!topbuy.market && topsell.market) price = topbuy.price;
           else if (!topbuy.market && !topsell.market)
             price =
               topbuy.order_id > topsell.order_id ? topbuy.price : topsell.price;
           else {
-            console.log("here");
-            price = state.curr_price;
+            console.log(
+              "here",
+              state.marketprice[state.marketprice.length - 1]
+            );
+            price = state.marketprice[state.marketprice.length - 1];
           }
           if (topbuy.quantity > topsell.quantity) {
             if (modusers[buyInd].fiat < price * topsell.quantity) {
@@ -214,7 +233,9 @@ const CountReducer = (
               buyInd,
               sellInd,
               price,
-              qty
+              qty,
+              topbuy.order_id,
+              topsell.order_id
             );
             topbuy.quantity -= qty;
             topsell.quantity = 0;
@@ -228,7 +249,9 @@ const CountReducer = (
               buyInd,
               sellInd,
               price,
-              qty
+              qty,
+              topbuy.order_id,
+              topsell.order_id
             );
             topsell.quantity -= qty;
             topbuy.quantity = 0;
@@ -240,39 +263,27 @@ const CountReducer = (
         } else break;
       }
       // console.log(buynew, sellnew, modusers, trans, "buy and sell ");
-
+      console.log(price, "in order");
+      mprice.push({ curr_price: price, step: 0 });
       return Object.assign({}, state, {
         sell: sellnew,
         buy: buynew,
         users: modusers,
         transaction: trans,
-        curr_price: price,
+        marketprice: mprice,
       });
 
-    case SELL:
-      sellnew = [...state.sell];
-      buynew = [...state.buy];
-      console.log(sellnew, buynew, "sell");
-      while (buynew.length > 0 && sellnew.length > 0) {
-        console.log(buynew, sellnew, "inside loop");
-        topbuy = buynew.dequeue();
-        topsell = topsell.dequeue();
-        if (topbuy.price > topsell.price) {
-          if (topbuy.quantity > topsell.quantity) {
-            topbuy.quantity -= topsell.quantity;
-            topsell.quantity = 0;
-          } else {
-            topsell.quantity -= topbuy.quantity;
-            topbuy.quantity = 0;
-          }
-          if (topbuy.quantity != 0) buynew.queue(topbuy);
-          if (topsell.quantity != 0) sellnew.queue(topsell);
-        } else break;
-      }
+    case SETPRICE:
+      var nprice = [...state.marketprice];
+
+      console.log(nprice, "nprice");
+      nprice.push({
+        curr_price: action.curr_price,
+        step: action.step,
+      });
 
       return Object.assign({}, state, {
-        sell: sellnew,
-        buy: buynew,
+        marketprice: nprice,
       });
 
     case CURRPRICE:
@@ -301,6 +312,8 @@ const CountReducer = (
             seller: action.seller,
             price: action.price,
             quantity: action.quantity,
+            buyorder: action.buyorder,
+            sellorder: action.sellorder,
           },
         ],
       });

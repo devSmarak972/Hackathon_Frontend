@@ -70,12 +70,21 @@ export const addUser = (name, quantity, fiat, user_id) => ({
   user_id: user_id,
 });
 export const ADDTRANS = "ADDTRANS";
-export const addTrans = (buyer, seller, price, quantity) => ({
+export const addTrans = (
+  buyer,
+  seller,
+  price,
+  quantity,
+  sellorder,
+  buyorder
+) => ({
   type: ADDTRANS,
   buyer: buyer,
   seller: seller,
   price: price,
   quantity: quantity,
+  buyorder: buyorder,
+  sellorder: sellorder,
 });
 
 export const UPDATEUSER = "UPDATEUSER";
@@ -85,4 +94,10 @@ export const updateuser = (name, quantity, fiat, id) => ({
   id: id,
   quantity: quantity,
   fiat: fiat,
+});
+export const SETPRICE = "SETPRICE";
+export const setprice = (curr_price, step) => ({
+  type: SETPRICE,
+  curr_price: curr_price,
+  step: step,
 });

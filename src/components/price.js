@@ -65,7 +65,42 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 //separate buying and selling prices
+import { Provider, useSelector, useDispatch } from "react-redux";
+import { setprice } from "../store/actions/count.actions";
+import axios from "axios";
+// import { addTrans } from "../store/actions/count.actions";
+import { useEffect } from "react";
 const Price = () => {
+  const dispatch = useDispatch();
+
+  function getPrice() {
+    axios({
+      method: "GET",
+      url: "http://127.0.0.1:8000/api/price",
+    })
+      .then(response => {
+        console.log(response.data, "price data");
+        response.data.forEach(price => {
+          dispatch(setprice(price.curr_price, price.step));
+        });
+      })
+      .catch(error => {
+        if (error.response) {
+          console.log(error.response);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }
+      });
+  }
+
+  useEffect(() => {
+    getPrice();
+  }, []);
+
+  // const trans = useSelector(state => state.transaction);
+  const prices = useSelector(state => state.marketprice);
+  console.log(prices);
+
   return (
     <Row>
       <h2>Current Market Price</h2>
@@ -73,7 +108,9 @@ const Price = () => {
         <Card>
           <Card.Body>
             <Card.Title>Current Buying Price</Card.Title>
-            <Card.Text>NA</Card.Text>
+            <Card.Text>
+              {prices.at(-1) ? prices.at(-1).curr_price : "$120"}
+            </Card.Text>
           </Card.Body>
         </Card>
         <Card>

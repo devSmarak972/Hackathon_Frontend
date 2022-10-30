@@ -14,6 +14,7 @@ import {
   updateuser,
   addUser,
   orderdispatch,
+  setprice,
 } from "../store/actions/count.actions";
 import store from "../store";
 import axios from "axios";
@@ -23,6 +24,7 @@ const Control = () => {
   const sell = useSelector(state => state.sell);
   const users = useSelector(state => state.users);
   const trans = useSelector(state => state.transaction);
+  const prices = useSelector(state => state.marketprice);
 
   function createOrder({ buy, user_id, market, quantity, price }) {
     var body = {
@@ -71,6 +73,21 @@ const Control = () => {
       })
       .then(reponse => {
         console.log(reponse.data);
+        console.log(prices, "prices");
+        var pbody = {
+          prices: prices,
+        };
+        return axios({
+          method: "POST",
+          url: "http://127.0.0.1:8000/api/price",
+          data: pbody,
+        });
+      })
+      .then(response => {
+        console.log(response.data, "price data");
+        response.data.forEach(price => {
+          dispatch(setprice(price.curr_price, price.step));
+        });
       })
       .catch(error => {
         if (error.response) {
@@ -104,7 +121,7 @@ const Control = () => {
     console.log(cuser, users, parseInt(event.target[1].value));
     if (!market && buy && cuser.fiat < price * event.target[3].value)
       alert("Not enough money");
-    else if (!market && sell && cuser.quantity < event.target[3].value)
+    else if (!market && !buy && cuser.quantity < event.target[3].value)
       alert("Not enough Stocks");
     else createOrder(data);
   }

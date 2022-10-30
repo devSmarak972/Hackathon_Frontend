@@ -45,7 +45,14 @@ const History = () => {
         console.log("success trans data", data);
         data.forEach(trans => {
           dispatch(
-            addTrans(trans.buyer, trans.seller, trans.price, trans.quant)
+            addTrans(
+              trans.buyer,
+              trans.seller,
+              trans.price,
+              trans.quant,
+              trans.buyorder,
+              trans.sellorder
+            )
           );
         });
       })
