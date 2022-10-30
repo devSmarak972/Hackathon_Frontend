@@ -13,7 +13,6 @@ import {
   limitsell,
   updateuser,
   addUser,
-  orderdispatch,
 } from "../store/actions/count.actions";
 import store from "../store";
 import axios from "axios";
@@ -22,7 +21,6 @@ const Control = () => {
   const buy = useSelector(state => state.buy);
   const sell = useSelector(state => state.sell);
   const users = useSelector(state => state.users);
-  const trans = useSelector(state => state.transaction);
 
   function createOrder({ buy, user_id, market, quantity, price }) {
     var body = {
@@ -45,32 +43,13 @@ const Control = () => {
         console.log("success in control", order);
         if (order.market) {
           if (order.buy) {
-            dispatch(marketbuy(order.quantity, order.user, order.order_id));
-          } else
-            dispatch(marketsell(order.quantity, order.user, order.order_id));
+            dispatch(marketbuy(order.quantity, order.user));
+          } else dispatch(marketsell(order.quantity, order.user));
         } else {
           if (order.buy)
-            dispatch(
-              limitbuy(order.quantity, order.price, order.user, order.order_id)
-            );
-          else
-            dispatch(
-              limitsell(order.quantity, order.price, order.user, order.order_id)
-            );
+            dispatch(limitbuy(order.quantity, order.price, order.user));
+          else dispatch(limitsell(order.quantity, order.price, order.user));
         }
-        dispatch(orderdispatch());
-        var tbody = {
-          trans: trans,
-        };
-        return axios({
-          method: "POST",
-          url: "http://127.0.0.1:8000/api/transaction",
-          data: tbody,
-        });
-        // update in database
-      })
-      .then(reponse => {
-        console.log(reponse.data);
       })
       .catch(error => {
         if (error.response) {
@@ -83,33 +62,18 @@ const Control = () => {
 
   function handleSubmit(event) {
     event.preventDefault();
-    var buy = event.target[0].value === "buy";
-    var market = event.target[2].value === "market";
-    var price =
-      event.target[4].value === "" && market
-        ? buy
-          ? -2
-          : 0
-        : event.target[4].value;
+
     const data = {
-      buy: buy,
+      buy: event.target[0].value === "buy" ? true : false,
       user_id: event.target[1].value,
-      market: market,
+      market: event.target[2].value == "market" ? true : false,
       quantity: event.target[3].value,
-      price: price,
+      price: event.target[4].value == "" ? -1 : event.target[4].value,
     };
-    var cuser = users.find(el => {
-      return el.user_id === parseInt(event.target[1].value);
-    });
-    console.log(cuser, users, parseInt(event.target[1].value));
-    if (!market && buy && cuser.fiat < price * event.target[3].value)
-      alert("Not enough money");
-    else if (!market && sell && cuser.quantity < event.target[3].value)
-      alert("Not enough Stocks");
-    else createOrder(data);
+    createOrder(data);
   }
-  // console.log("users in control", users);
-  // console.log(buy, sell, "in buy sell");
+  console.log("users in control", users);
+  console.log(buy, sell, "in buy sell");
   return (
     <Card style={{ width: "18rem" }}>
       <Card.Title style={{ marginBottom: -10, marginTop: 5 }}>

@@ -20,32 +20,45 @@ export const RESET = "RESET";
 export const reset = () => ({ type: RESET });
 
 export const LIMITBUY = "LIMITBUY";
-export const limitbuy = (quantity, price, user) => ({
+export const limitbuy = (quantity, price, user, order_id) => ({
   type: LIMITBUY,
   quantity: quantity,
   price: price,
   user_id: user,
+  order_id: order_id,
   // username: username,
 });
 export const MARKETBUY = "MARKETBUY";
-export const marketbuy = (quantity, user) => ({
+export const marketbuy = (quantity, user, order_id) => ({
   type: MARKETBUY,
   quantity: quantity,
   user_id: user,
+  order_id: order_id,
 });
 
 export const LIMITSELL = "LIMITSELL";
-export const limitsell = (quantity, price, user) => ({
+export const limitsell = (quantity, price, user, order_id) => ({
   type: LIMITSELL,
   quantity: quantity,
   price: price,
   user_id: user,
+  order_id: order_id,
 });
 export const MARKETSELL = "MARKETSELL";
-export const marketsell = (quantity, user) => ({
+export const marketsell = (quantity, user, order_id) => ({
   type: MARKETSELL,
   quantity: quantity,
   user_id: user,
+  order_id: order_id,
+});
+
+export const ORDER = "ORDER";
+export const orderdispatch = () => ({
+  type: ORDER,
+});
+export const SELL = "SELL";
+export const sell = () => ({
+  type: SELL,
 });
 
 export const ADDUSER = "ADDUSER";
@@ -55,6 +68,14 @@ export const addUser = (name, quantity, fiat, user_id) => ({
   quantity: quantity,
   fiat: fiat,
   user_id: user_id,
+});
+export const ADDTRANS = "ADDTRANS";
+export const addTrans = (buyer, seller, price, quantity) => ({
+  type: ADDTRANS,
+  buyer: buyer,
+  seller: seller,
+  price: price,
+  quantity: quantity,
 });
 
 export const UPDATEUSER = "UPDATEUSER";

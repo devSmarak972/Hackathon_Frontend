@@ -26,7 +26,7 @@ const Portfolio = () => {
     })
       .then(response => {
         const data = response.data;
-        console.log("success", data);
+        // console.log("success", data);
         data.forEach(el => {
           dispatch(addUser(el.name, el.quant, el.fiat, el.user_id));
         });
@@ -45,7 +45,7 @@ const Portfolio = () => {
   }, []);
 
   const users = useSelector(state => state.users);
-  console.log("users", users);
+  // console.log("users", users);
   const users1 = [
     {
       user_id: 1,
@@ -69,30 +69,30 @@ const Portfolio = () => {
 
   return (
     <>
-    <h1 style={{marginTop: 30}}>User Portfolio</h1>
-    <Table responsive striped bordered hover variant="dark" size="sm">
-      <thead>
-        <tr>
-          <th>User name</th>
-          <th>Stocks</th>
-          <th>Fiat $</th>
-        </tr>
-      </thead>
-      <tbody>
-        {users
-          ? users.map(function (user) {
-              var list = [];
-              list.push(
-                <tr key={user.user_id}>
-                  <td>{user.name}</td>
-                  <td>{user.quantity}</td>
-                  <td>{user.fiat}</td>
-                </tr>
-              );
-              return list;
-            })
-          : []}
-        {/* <tr>
+      <h1 style={{ marginTop: 30 }}>User Portfolio</h1>
+      <Table responsive striped bordered hover variant="dark" size="sm">
+        <thead>
+          <tr>
+            <th>User name</th>
+            <th>Stocks</th>
+            <th>Fiat $</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users
+            ? users.map(function (user) {
+                var list = [];
+                list.push(
+                  <tr key={user.user_id}>
+                    <td>{user.name}</td>
+                    <td>{user.quantity}</td>
+                    <td>{user.fiat}</td>
+                  </tr>
+                );
+                return list;
+              })
+            : []}
+          {/* <tr>
           <td>A</td>
           <td>10</td>
           <td>5000</td>
@@ -107,8 +107,8 @@ const Portfolio = () => {
           <td>30</td>
           <td>6000</td>
         </tr> */}
-      </tbody>
-    </Table>
+        </tbody>
+      </Table>
     </>
   );
 };
